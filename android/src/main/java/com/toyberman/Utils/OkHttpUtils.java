@@ -110,38 +110,6 @@ public class OkHttpUtils {
 
     }
 
-    public static OkHttpClient buildDefaultOHttpClient(CookieJar cookieJar, String domainName, ReadableMap options) {
-
-
-        if (defaultClient == null) {
-
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-            OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-            clientBuilder.cookieJar(cookieJar);
-
-            if (BuildConfig.DEBUG) {
-                clientBuilder.addInterceptor(logging);
-            }
-
-            defaultClient = clientBuilder.build();
-        }
-
-        if (options.hasKey("timeoutInterval")) {
-            int timeout = options.getInt("timeoutInterval");
-
-            defaultClient = defaultClient.newBuilder()
-                    .readTimeout(timeout, TimeUnit.MILLISECONDS)
-                    .writeTimeout(timeout, TimeUnit.MILLISECONDS)
-                    .connectTimeout(timeout, TimeUnit.MILLISECONDS)
-                    .build();
-        }
-
-        return defaultClient;
-
-    }
-
     private static CertificatePinner initPublicKeyPinning(ReadableArray pins, String domain) {
 
 

@@ -47,7 +47,6 @@ public class RNSslPinningModule extends ReactContextBaseJavaModule {
 
 
     private static final String OPT_SSL_PINNING_KEY = "sslPinning";
-    private static final String DISABLE_ALL_SECURITY = "disableAllSecurity";
     private static final String RESPONSE_TYPE = "responseType";
     private static final String KEY_NOT_ADDED_ERROR = "sslPinning key was not added";
 
@@ -179,11 +178,7 @@ public class RNSslPinningModule extends ReactContextBaseJavaModule {
         } catch (URISyntaxException e) {
             domainName = hostname;
         }
-        if (options.hasKey(DISABLE_ALL_SECURITY) && options.getBoolean(DISABLE_ALL_SECURITY)) {
-            client = OkHttpUtils.buildDefaultOHttpClient(cookieJar, domainName, options);
-        }
-        // With ssl pinning
-        else if (options.hasKey(OPT_SSL_PINNING_KEY)) {
+        if (options.hasKey(OPT_SSL_PINNING_KEY)) {
             if (options.getMap(OPT_SSL_PINNING_KEY).hasKey("certs")) {
                 ReadableArray certs = options.getMap(OPT_SSL_PINNING_KEY).getArray("certs");
                 if (certs != null && certs.size() == 0) {
