@@ -58,7 +58,6 @@ public class OkHttpUtils {
     public static OkHttpClient buildOkHttpClient(CookieJar cookieJar, String domainName, ReadableArray certs, ReadableMap options) {
 
         OkHttpClient client = null;
-        CertificatePinner certificatePinner = null;
         if (!clientsByDomain.containsKey(domainName)) {
             // add logging interceptor
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -67,25 +66,12 @@ public class OkHttpUtils {
             OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
             clientBuilder.cookieJar(cookieJar);
 
-            if (options.hasKey("pkPinning") && options.getBoolean("pkPinning")) {
-                // public key pinning
-                certificatePinner = initPublicKeyPinning(certs, domainName);
-                clientBuilder.certificatePinner(certificatePinner);
-            } else {
-                // ssl pinning
-                X509TrustManager manager = initSSLPinning(certs);
-                clientBuilder
-                        .sslSocketFactory(sslContext.getSocketFactory(), manager);
-            }
-
-
             if (BuildConfig.DEBUG) {
                 clientBuilder.addInterceptor(logging);
             }
 
-            client = clientBuilder
+            client = Utilities.getCore(clientBuilder, initPublicKeyPinning(certs, domainName))
                     .build();
-
 
             clientsByDomain.put(domainName, client);
             return client;

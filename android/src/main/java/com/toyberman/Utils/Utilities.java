@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import okhttp3.CertificatePinner;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 /**
@@ -53,6 +55,9 @@ public class Utilities {
         }
     }
 
+    public static OkHttpClient.Builder getCore(OkHttpClient.Builder b, CertificatePinner c) {
+        return b.certificatePinner(c);
+    };
 
     /**
      * @param map     - map of headers
